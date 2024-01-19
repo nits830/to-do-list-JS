@@ -4,7 +4,8 @@ import './App.css';
 
 interface Items{
   _id: number,
-  item: string
+  item: string,
+  completed: boolean
 }
 
 const App:React.FC = ()=> {
@@ -14,10 +15,16 @@ const App:React.FC = ()=> {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
-    setList([...list, {_id:list.length, item:input}])
+    setList([...list, {_id:list.length, item:input, completed: false}])
     setInput('');
   }
+
+  const handleDone = (itemId: number) => {
+    setList((prevList) => 
+    (prevList.map((item) => item._id === itemId ? {...item, completed: !item.completed}:item)))
+  }
   
+
   useEffect(()=>{
     if(inputRef.current){
       inputRef.current.focus();
@@ -33,7 +40,11 @@ const App:React.FC = ()=> {
     </div>
     <div>
       {list.map((todo)=>(
-        <li key ={todo._id}>{todo.item}</li>
+        <li key ={todo._id} 
+        onClick={() =>handleDone(todo._id)} 
+        style={{textDecoration: todo.completed ? 'line-through':''}}
+        >
+          {todo.item}</li>
       ))}
     </div>
     </>
