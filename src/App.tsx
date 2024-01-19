@@ -1,25 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useRef, useState } from 'react';
+
 import './App.css';
 
-function App() {
+interface Items{
+  _id: number,
+  item: string
+}
+
+const App:React.FC = ()=> {
+
+  const [input, setInput] = useState<string>('');
+  const [list, setList] = useState<Items[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleClick = () => {
+    setList([...list, {_id:list.length, item:input}])
+    setInput('');
+  }
+  
+  useEffect(()=>{
+    if(inputRef.current){
+      inputRef.current.focus();
+    }
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+    <h1>To Do List</h1>
+    <div>
+    <input ref={inputRef} type='text' value = {input} onChange={(e)=> setInput(e.target.value)}/>
+    <button onClick={handleClick}>+</button>
     </div>
+    <div>
+      {list.map((todo)=>(
+        <li key ={todo._id}>{todo.item}</li>
+      ))}
+    </div>
+    </>
   );
 }
 
